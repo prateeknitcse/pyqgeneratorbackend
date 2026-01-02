@@ -28,5 +28,16 @@ router.get("/", async (req, res) => {
   const papers = await Paper.find(req.query);
   res.json(papers);
 });
+// 📚 Get unique subjects by branch & semester
+router.get("/subjects", async (req, res) => {
+  const { branch, semester } = req.query;
+
+  if (!branch || !semester) {
+    return res.json([]);
+  }
+
+  const subjects = await Paper.distinct("subject", { branch, semester });
+  res.json(subjects);
+});
 
 module.exports = router;
