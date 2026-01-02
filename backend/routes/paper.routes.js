@@ -2,9 +2,16 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload");
 const Paper = require("../models/Paper.js");
+const verifyAdmin = require("../middleware/auth");
+
 
 // 📤 Upload Paper (Admin)
-router.post("/upload", upload.single("paper"), async (req, res) => {
+router.post(
+  "/upload",
+  verifyAdmin,
+  upload.single("paper"),
+  async (req, res) => {
+
   try {
     const existing = await Paper.findOne({
   branch: req.body.branch,
