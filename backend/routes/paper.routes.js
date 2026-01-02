@@ -3,6 +3,8 @@ const router = express.Router();
 const upload = require("../middleware/upload");
 const Paper = require("../models/Paper.js");
 const verifyAdmin = require("../middleware/auth");
+const uploadToDrive = require("../utils/drive");
+
 
 
 // 📤 Upload Paper (Admin)
@@ -11,38 +13,30 @@ router.post(
   verifyAdmin,
   upload.single("paper"),
   async (req, res) => {
+    try {
+      // Upload PDF to Google Drive
+      const fileUrl = await uploadToDrive(req.file);
 
-  try {
-    const existing = await Paper.findOne({
-  branch: req.body.branch,
-  semester: req.body.semester,
-  year: req.body.year,
-  exam: req.body.exam,
-  subject: req.body.subject
-});
+      const paper = new Paper({
+        branch: req.body.branch,
+        semester: req.body.semester,
+        year: req.body.year,
+        exam: req.body.exam,
+        subject: req.body.subject,
+        fileUrl
+      });
 
-if (existing) {
-  return res.status(409).json({
-    error: "Paper already exists for this subject and exam"
-  });
-}
+      await paper.save();
 
-    const paper = new Paper({
-      branch: req.body.branch,
-      semester: req.body.semester,
-      year: req.body.year,
-      exam: req.body.exam,
-      subject: req.body.subject,
-      filePath: req.file.path
-    });
+      res.json({ message: "Paper uploaded to Google Drive" });
 
-    await paper.save();
-    res.json({ message: "Paper uploaded successfully" });
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Drive upload failed" });
+    }
   }
-});
+);
+
 
 // 📄 Fetch Papers (User)
 router.get("/", async (req, res) => {

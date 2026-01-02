@@ -10,3 +10,5 @@ backend/uploads/
 
 # Logs
 npm-debug.log*
+credentials.json
+
