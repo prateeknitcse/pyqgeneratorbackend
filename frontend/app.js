@@ -16,7 +16,7 @@ form.addEventListener("submit", e => {
         results.innerHTML = "<p>No papers found</p>";
       } else {
         results.innerHTML = data.map(paper => `
-          <a href="http://localhost:5000/${paper.filePath}" target="_blank">
+          <a href="http://localhost:5000/${paper.filePath.replace(/\\/g, "/")}" target="_blank">
             ${paper.subject} (${paper.year} ${paper.exam})
           </a>
         `).join("<br>");

@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload");
-const Paper = require("../models/Paper");
-
+const Paper = require("../models/Paper.js");
 
 // 📤 Upload Paper (Admin)
 router.post("/upload", upload.single("paper"), async (req, res) => {
@@ -23,7 +22,6 @@ router.post("/upload", upload.single("paper"), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // 📄 Fetch Papers (User)
 router.get("/", async (req, res) => {

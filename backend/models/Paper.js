@@ -14,3 +14,4 @@ const paperSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Paper", paperSchema);
+
