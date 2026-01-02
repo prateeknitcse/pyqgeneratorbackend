@@ -6,6 +6,20 @@ const Paper = require("../models/Paper.js");
 // 📤 Upload Paper (Admin)
 router.post("/upload", upload.single("paper"), async (req, res) => {
   try {
+    const existing = await Paper.findOne({
+  branch: req.body.branch,
+  semester: req.body.semester,
+  year: req.body.year,
+  exam: req.body.exam,
+  subject: req.body.subject
+});
+
+if (existing) {
+  return res.status(409).json({
+    error: "Paper already exists for this subject and exam"
+  });
+}
+
     const paper = new Paper({
       branch: req.body.branch,
       semester: req.body.semester,
