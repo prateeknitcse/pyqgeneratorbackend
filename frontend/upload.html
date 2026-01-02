@@ -1,33 +1,324 @@
-<form action="http://localhost:5000/api/papers/upload"
-      method="POST"
-      enctype="multipart/form-data">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload PYQ | NITAP</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-  <select name="branch">
-    <option value="me">Mechanical</option>
-    <option value="cse">CSE</option>
-  </select>
+  <!-- Bootstrap -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
 
-  <select name="semester">
-    <option value="7">7</option>
-  </select>
+  <style>
+    /* ========= Base ========= */
+    :root {
+      --bg1: #050816;
+      --bg2: #0b1120;
+      --accent: #7b61ff;
+      --accent-soft: #684edf;
+      --accent-alt: #f97316;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.8);
+    }
 
-  <input type="text" name="subject" placeholder="Subject" required>
+    *, *::before, *::after { box-sizing: border-box; }
 
-  <!-- ✅ FIX: added name="exam" -->
-  <select name="exam" required>
-    <option value="">Select Exam</option>
-    <option value="midsem">Mid Sem</option>
-    <option value="endsem">End Sem</option>
-  </select>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,.18), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text-main);
+    }
 
-  <select name="year" required>
-    <option value="">Select Year</option>
-    <option value="2023">2023</option>
-    <option value="2024">2024</option>
-    <option value="2025">2025</option>
-  </select>
+    /* ========= Header ========= */
+    .header-container {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5, 6, 14, 0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
 
-  <input type="file" name="paper" accept="application/pdf" required>
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
 
-  <button type="submit">Upload Paper</button>
-</form>
+    .logo-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-left img {
+      height: 48px;
+    }
+
+    .institute-name a {
+      font-weight: 700;
+      color: #93c5fd;
+      text-decoration: none;
+      line-height: 1.3;
+    }
+
+    /* ========= Section ========= */
+    .section {
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px 60px;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-subtle);
+      padding: 28px 24px 32px;
+      backdrop-filter: blur(22px);
+      animation: cardIn 0.6s ease-out;
+    }
+
+    /* ========= Titles ========= */
+    .hero-title {
+      font-size: clamp(1.8rem, 2.2vw + 1rem, 2.4rem);
+      font-weight: 800;
+      background: linear-gradient(120deg, #8b5cf6, #ec4899, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    /* ========= Form ========= */
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px 20px;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+      color: #d1d5db;
+      margin-bottom: 4px;
+    }
+
+    .form-select,
+    .form-control {
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+      outline: none;
+    }
+
+    input[type="file"] {
+      padding: 6px 14px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #d1d5db;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+    }
+
+    /* ========= Buttons ========= */
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-custom {
+      background: radial-gradient(circle at top left, #a78bfa, #7b61ff);
+      color: white;
+      padding: 9px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 25px rgba(124, 101, 255, 0.45);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-custom:hover {
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: 0 14px 32px rgba(129, 140, 248, 0.6);
+    }
+
+    .btn-secondary-custom {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: #e5e7eb;
+      padding: 9px 22px;
+      border-radius: 999px;
+      text-decoration: none;
+    }
+
+    /* ========= Footer ========= */
+    footer {
+      background: radial-gradient(circle at top left, #4ade80, #38bdf8);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      form { grid-template-columns: 1fr; }
+      .form-actions { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="header-container">
+    <div class="container logo">
+      <div class="logo-left">
+        <a href="https://www.nitap.ac.in/">
+          <img src="logonitap-removebg-preview.png" alt="NITAP Logo" />
+        </a>
+        <div class="institute-name">
+          <a href="https://www.nitap.ac.in/">National Institute of Technology Arunachal Pradesh</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Section -->
+  <div class="section">
+    <div class="inner">
+
+      <h1 class="hero-title">Upload Question Paper</h1>
+      <p class="hero-subtitle">
+        Admin-only panel to upload and manage NITAP past year question papers.
+      </p>
+
+      <form
+        action="http://localhost:5000/api/papers/upload"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+
+        <div>
+          <label class="form-label">Branch</label>
+          <select name="branch" class="form-select" required>
+            <option value="cse">CSE</option>
+            <option value="ece">ECE</option>
+            <option value="ee">EE</option>
+            <option value="me">ME</option>
+            <option value="ce">CE</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Semester</label>
+          <select name="semester" class="form-select" required>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Year</label>
+          <select name="year" class="form-select" required>
+            <option value="">Select Year</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Exam</label>
+          <select name="exam" class="form-select" required>
+            <option value="">Select Exam</option>
+            <option value="midsem">Mid Semester</option>
+            <option value="endsem">End Semester</option>
+          </select>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="form-label">Subject</label>
+          <input
+            type="text"
+            name="subject"
+            class="form-control"
+            placeholder="e.g. Data Structures"
+            required
+          />
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="form-label">Upload PDF</label>
+          <input
+            type="file"
+            name="paper"
+            accept="application/pdf"
+            required
+          />
+        </div>
+
+        <div class="form-actions">
+          <a href="index.html" class="btn-secondary-custom">⬅ Back</a>
+          <button type="submit" class="btn-custom">⬆ Upload Paper</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; STARS 2025. All rights reserved.
+  </footer>
+
+</body>
+</html>
