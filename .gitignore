@@ -1,0 +1,12 @@
+# Node
+node_modules/
+
+# Uploads (PDFs)
+uploads/
+backend/uploads/
+
+# Environment
+.env
+
+# Logs
+npm-debug.log*

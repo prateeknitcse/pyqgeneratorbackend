@@ -1,0 +1,26 @@
+<form action="http://localhost:5000/api/papers/upload"
+      method="POST"
+      enctype="multipart/form-data">
+
+  <select name="branch">
+    <option value="me">Mechanical</option>
+    <option value="cse">CSE</option>
+  </select>
+
+  <select name="semester">
+    <option value="7">7</option>
+  </select>
+
+  <input type="text" name="subject" placeholder="Subject" required>
+
+  <select name="exam">
+    <option value="midsem">Mid Sem</option>
+    <option value="endsem">End Sem</option>
+  </select>
+
+  <input type="text" name="year" placeholder="2024" required>
+
+  <input type="file" name="paper" accept="application/pdf" required>
+
+  <button type="submit">Upload Paper</button>
+</form>
