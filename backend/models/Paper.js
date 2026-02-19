@@ -6,7 +6,7 @@ const paperSchema = new mongoose.Schema({
   year: String,
   exam: String,
   subject: String,
-  fileUrl: String,   // 🔥 Drive link
+  fileUrl: String, 
   uploadedAt: {
     type: Date,
     default: Date.now
